@@ -121,7 +121,7 @@
         }
 
         .planet-style-3 {
-            width: 60px; height: 60px;
+            width: 80px; height: 80px;
             background-image: url('textures/mars.jpg');
             background-size: 1000% 1000%;
             box-shadow: inset -10px -20px 25px rgba(0, 0, 0, 0.726);
@@ -179,11 +179,7 @@
         
 
         
-        .jupiter-rotation-bg {
-            background-image: url('textures/jupiter.jpg');
-            background-size: 200% 100%;
-            animation: slide-texture 90s linear infinite;
-        }
+        
 
         @keyframes slide-texture {
             from { background-position: 0% 50%; }
@@ -223,8 +219,8 @@
         .section-blend-top {
             content: ''; position: absolute;
             top: 0; left: 0; right: 0;
-            height: 150px;
-            background: linear-gradient(to bottom, #0A0A14 30%, transparent);
+            height: 500px;
+            background: linear-gradient(to bottom, #0A0A14 0%, transparent);
             z-index: 15;
             pointer-events: none;
         }
@@ -232,12 +228,58 @@
         .section-blend-bottom {
             content: ''; position: absolute;
             bottom: 0; left: 0; right: 0;
-            height: 150px;
-            background: linear-gradient(to top, #0A0A14 30%, transparent);
+            height: 500px;
+            background: linear-gradient(to top, #0A0A14 0%, transparent);
             z-index: 15;
             pointer-events: none;
         }
+
+        .about-overlay {
+            background: radial-gradient(circle at bottom,
+            rgba(10, 10, 20, 0.4) 20%,  /* Warna di pusat lingkaran (lebih transparan) */
+            rgba(10, 10, 20, 1) 40%   /* Warna di tepi lingkaran (lebih pekat) */
+            );
+        }
+
+        .services-overlay {
+            background: radial-gradient(circle at top,
+            rgba(10, 10, 20, 0.4) 20%,  /* Warna di pusat lingkaran (lebih transparan) */
+            rgba(10, 10, 20, 1) 40%   /* Warna di tepi lingkaran (lebih pekat) */
+            );
+        }
+
+        .portofolio-overlay {
+            background: radial-gradient(circle at center,
+            rgba(10, 10, 20, 0.4) 20%,  /* Warna di pusat lingkaran (lebih transparan) */
+            rgba(10, 10, 20, 1) 40%   /* Warna di tepi lingkaran (lebih pekat) */
+            );
+        }
+
+        .jupiter-rotation-bg {
+            background-image: url('textures/jupiter.jpg');
+            background-size: 200% 100%;
+            animation: slide-texture 90s linear infinite;
+        }
+
+        /* Latar belakang bumi yang berotasi */
+        .earth-rotation-bg {
+        background-image: url('Textures/Earth.jpg');
+        background-size: 150% auto;
+        /* Ubah baris ini untuk memposisikan bumi di sisi */
+        background-position: 25% 50%;
+        animation: slide-texture 180s linear infinite;
+        }
+
+        /* Latar belakang bumi yang berotasi */
+        .mars-rotation-bg {
+        background-image: url('Textures/Mars.jpg');
+        background-size: 150% auto;
+        /* Ubah baris ini untuk memposisikan bumi di sisi */
+        background-position: 25% 50%;
+        animation: slide-texture 180s linear infinite;
+        }
     </style>
+
 </head>
 
 <body class="bg-dark-bg text-white font-sans overflow-x-hidden h-full"
@@ -332,6 +374,8 @@
 
     <div class="scroll-container">
         <main>
+
+            
             <section 
                 id="hero" 
                 class="relative min-h-screen flex items-center justify-center p-8 overflow-hidden"
@@ -353,7 +397,7 @@
                     </div>
                 </div>
                 
-                <div class="planet-container top-1/4 left-[10%]" :style="`transform: translate(${rotateY * 2}px, ${-rotateX * 2}px);`">
+                <div class="planet-container top-[20%] left-[10%]" :style="`transform: translate(${rotateY * 2}px, ${-rotateX * 2}px);`">
                     <a href="#services" @click.prevent="zoomToSection($event, '#services')" x-ref="planet_services">
                         <div class="planet planet-style-2"></div>
                         <div class="skill-tooltip">Desain UI/UX</div>
@@ -378,10 +422,14 @@
                     </a>
                 </div>
 
+                
+
                 <div 
                     class="relative z-30 text-center flex flex-col items-center transition-transform duration-300 ease-out" 
                     :style="`transform: perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg);`"
+                    
                 >
+                     <img src="image/Boy.png" alt="Foto Profil Boybe Jan Mada Kusuma" class="rounded-full w-30 h-30 md:w-30 md:h-30">
                     <h1 class="font-display text-5xl md:text-7xl lg:text-8xl font-bold leading-tight mb-4">
                         Hai, saya <span class="text-gradient bg-gradient-to-r from-brand-pink to-brand-yellow">Boybe Jan Mada Kusuma</span>
                     </h1>
@@ -395,19 +443,82 @@
 
             <section id="about" class="relative min-h-screen bg-dark-bg overflow-hidden flex items-center justify-center">
                 <div class="absolute inset-0 z-0 jupiter-rotation-bg"></div>
-                <div class="absolute inset-0 z-10 about-overlay"></div>
+                <div class="absolute inset-0 z-0 about-overlay"></div>  
+                    
+                <div class="absolute inset-0 z-0 transition-transform duration-300 ease-out" :style="`transform: perspective(1000px) rotateX(${rotateX / 2}deg) rotateY(${rotateY / 2}deg) scale(1.2);`">
+                
+                    <div class="galaxy-bg">
+                        <template x-for="i in 150">
+                            <div class="absolute rounded-full bg-white animate-star-twinkle"
+                                :style="(() => {
+                                    let top, left;
+                                    const zone = Math.floor(Math.random() * 2); // Dipersempit menjadi 2 zona: kiri & kanan
+                        
+                                    // Zona tepi dibuat lebih sempit, misal 20% dari tepi
+                                    const safeZoneHorizontal = 0.20; 
+
+                                    // Posisi atas (top) tetap acak dari atas ke bawah
+                                    top = Math.random(); 
+                        
+                                    if (zone === 0) { // Zona Kiri
+                                        left = Math.random() * safeZoneHorizontal;
+                                    } else { // Zona Kanan
+                                        left = 1 - (Math.random() * safeZoneHorizontal);
+                                    }
+
+                                    return `
+                                        top: ${top * 100}%;
+                                        left: ${left * 100}%;
+                                        width: ${Math.random() * 2 + 1}px;
+                                        height: ${Math.random() * 2 + 1}px;
+                                        animation-delay: ${Math.random() * 5}s;
+                                        animation-duration: ${Math.random() * 3 + 2}s;
+                                    `;
+                                })()">
+                            </div>
+                         </template>
+                        <div class="shooting-star-wrapper" style="top: -20%; left: 20%; animation-delay: 0s;"></div>
+                        <div class="shooting-star-wrapper" style="top: -20%; left: 80%; animation-delay: 3s;"></div>
+                    </div>
+                </div>
+                
                 <div class="section-blend-top"></div>
-            
+                
+                
+
+                <div class="planet-container top-[20%] left-[10%]" :style="`transform: translate(${rotateY * 2}px, ${-rotateX * 2}px);`">
+                    
+                    <div class="absolute inset-0 z-10 portofolio-overlay"></div>
+                    <a href="#services" @click.prevent="zoomToSection($event, '#services')" x-ref="planet_services">
+                        <div class="planet planet-style-2"></div>
+                        <div class="skill-tooltip">Desain UI/UX</div>
+                    </a>
+                </div>
+
+                <div class="planet-container bottom-[15%] top-[8%]" :style="`transform: translate(${rotateY * 1.5}px, ${-rotateX * 1.5}px);`">
+                    <a href="#portfolio" @click.prevent="zoomToSection($event, '#portfolio')" x-ref="planet_portfolio">
+                        <div class="planet planet-style-3"></div>
+                        <div class="skill-tooltip">Karya Pilihan</div>
+                    </a>
+                </div>
+
+                <div class="planet-container top-[15%] right-[15%]" :style="`transform: translate(${rotateY * 3}px, ${-rotateX * 3}px);`">
+                    <a href="#contact" @click.prevent="zoomToSection($event, '#contact')" x-ref="planet_contact">
+                        <div class="planet planet-style-1"></div>
+                        <div class="skill-tooltip">Hubungi Saya</div>
+                    </a>
+                </div>
+                
                 <div class="relative z-20 w-full max-w-6xl px-8 py-20 text-center">
                     <div x-intersect:enter.once="$el.classList.add('reveal-active')" class="reveal-item mb-8">
                         <h2 class="font-display text-4xl md:text-6xl font-bold text-gradient bg-gradient-to-r from-brand-blue to-brand-pink text-gradient-animated">
-                            Perpaduan Seni & Teknologi
+                            Tentang Saya
                         </h2>
                     </div>
             
                     <div x-intersect:enter.once="$el.classList.add('reveal-active')" class="reveal-item max-w-3xl mx-auto mb-16" style="transition-delay: 200ms;">
                         <p class="text-lg md:text-xl text-gray-300 leading-relaxed">
-                            Gairah saya adalah menciptakan pengalaman digital yang tidak hanya memukau secara visual, tetapi juga intuitif dan efektif dalam mencapai tujuan. Saya percaya bahwa desain dan teknologi, ketika berpadu dengan baik, dapat menghasilkan solusi yang luar biasa dan cerita yang tak terlupakan.
+                            Passion saya adalah menciptakan pengalaman digital yang tidak hanya memukau secara visual, tetapi juga intuitif dan efektif dalam mencapai tujuan. Saya percaya bahwa desain dan teknologi, ketika berpadu dengan baik, dapat menghasilkan solusi yang luar biasa dan cerita yang tak terlupakan.
                         </p>
                     </div>
             
@@ -425,58 +536,161 @@
                         <div x-intersect:enter.once="$el.classList.add('reveal-active')" class="reveal-item p-8 rounded-lg glass-card" style="transition-delay: 800ms;">
                             <div class="text-3xl mb-4 text-brand-blue">📈</div>
                             <h3 class="font-display text-2xl font-bold mb-2">Berbasis Data</h3>
-                            <p class="text-gray-400">Menggabungkan analisis dan data untuk memastikan setiap keputusan desain dan pemasaran mencapai tujuan yang tepat.</p>
+                            <p class="text-gray-400">Menggabungkan antara Seni dengan Dunia Digital Marketing</p>
+                        </div>
+                    </div>
+                </div>
+                
+            </section>
+
+            <section id="services" class="relative min-h-screen bg-dark-bg overflow-hidden flex items-center justify-center earth-rotation-bg">
+                <div class="absolute inset-0 z-0 services-overlay"></div>
+                
+                <div class="absolute inset-0 z-0 transition-transform duration-300 ease-out" :style="`transform: perspective(1000px) rotateX(${rotateX / 2}deg) rotateY(${rotateY / 2}deg) scale(1.2);`">
+                
+                    <div class="galaxy-bg">
+                        <template x-for="i in 150">
+                            <div class="absolute rounded-full bg-white animate-star-twinkle"
+                                :style="(() => {
+                                    let top, left;
+                                    const zone = Math.floor(Math.random() * 2); // Dipersempit menjadi 2 zona: kiri & kanan
+                        
+                                    // Zona tepi dibuat lebih sempit, misal 20% dari tepi
+                                    const safeZoneHorizontal = 0.20; 
+
+                                    // Posisi atas (top) tetap acak dari atas ke bawah
+                                    top = Math.random(); 
+                        
+                                    if (zone === 0) { // Zona Kiri
+                                        left = Math.random() * safeZoneHorizontal;
+                                    } else { // Zona Kanan
+                                        left = 1 - (Math.random() * safeZoneHorizontal);
+                                    }
+
+                                    return `
+                                        top: ${top * 100}%;
+                                        left: ${left * 100}%;
+                                        width: ${Math.random() * 2 + 1}px;
+                                        height: ${Math.random() * 2 + 1}px;
+                                        animation-delay: ${Math.random() * 5}s;
+                                        animation-duration: ${Math.random() * 3 + 2}s;
+                                    `;
+                                })()">
+                            </div>
+                         </template>
+                        <div class="shooting-star-wrapper" style="top: -20%; left: 20%; animation-delay: 0s;"></div>
+                        <div class="shooting-star-wrapper" style="top: -20%; left: 80%; animation-delay: 3s;"></div>
+                    </div>
+                </div>
+
+                <div class="planet-container bottom-1/4 right-[25%]" :style="`transform: translate(${rotateY * 2.5}px, ${-rotateX * 2.5}px);`">
+                    <a href="#about" @click.prevent="zoomToSection($event, '#about')" x-ref="planet_about">
+                        <div class="planet planet-style-4"></div>
+                        <div class="skill-tooltip">Tentang Saya</div>
+                    </a>
+                </div>
+
+                
+
+                <div class="planet-container bottom-[15%] left[8%]" :style="`transform: translate(${rotateY * 1.5}px, ${-rotateX * 1.5}px);`">
+                    <a href="#portfolio" @click.prevent="zoomToSection($event, '#portfolio')" x-ref="planet_portfolio">
+                        <div class="planet planet-style-3"></div>
+                        <div class="skill-tooltip">Karya Pilihan</div>
+                    </a>
+                </div>
+
+                <div class="planet-container bottom-[15%] left-[15%]" :style="`transform: translate(${rotateY * 3}px, ${-rotateX * 3}px);`">
+                    <a href="#contact" @click.prevent="zoomToSection($event, '#contact')" x-ref="planet_contact">
+                        <div class="planet planet-style-1"></div>
+                        <div class="skill-tooltip">Hubungi Saya</div>
+                    </a>
+                </div>
+                
+                <div class="relative z-20 max-w-6xl mx-auto px-8 py-20">
+                    <h2 class="font-display text-4xl md:text-5xl font-bold text-center mb-16 reveal-item" x-intersect:enter.once="$el.classList.add('reveal-active')">
+                        Apa yang Saya Lakukan? 🤔
+                    </h2>
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                        <div class="glass-card p-8 reveal-item" x-intersect:enter.once="$el.classList.add('reveal-active')" style="transition-delay: 200ms;">
+                            <div class="text-5xl mb-4">🎨</div>
+                            <h3 class="font-display text-2xl font-bold mb-2 text-gradient bg-gradient-to-r from-brand-pink to-pink-400">Desain UI/UX</h3>
+                            <p class="text-gray-300">Menciptakan antarmuka yang intuitif dan menarik secara visual yang disukai pengguna.</p>
+                        </div>
+                        <div class="glass-card p-8 reveal-item" x-intersect:enter.once="$el.classList.add('reveal-active')" style="transition-delay: 400ms;">
+                            <div class="text-5xl mb-4">🎯</div>
+                            <h3 class="font-display text-2xl font-bold mb-2 text-gradient bg-gradient-to-r from-brand-yellow to-yellow-300">Landing Page Kreatif</h3>
+                            <p class="text-gray-300">Membangun halaman arahan yang tidak hanya menjual tetapi juga memikat audiens.</p>
+                        </div>
+                        <div class="glass-card p-8 reveal-item" x-intersect:enter.once="$el.classList.add('reveal-active')" style="transition-delay: 600ms;">
+                            <div class="text-5xl mb-4">📈</div>
+                            <h3 class="font-display text-2xl font-bold mb-2 text-gradient bg-gradient-to-r from-brand-blue to-blue-300">Visual Pemasaran Digital</h3>
+                            <p class="text-gray-300">Merancang visual untuk media sosial dan iklan yang menghentikan *scrolling*.</p>
                         </div>
                     </div>
                 </div>
                 <div class="section-blend-bottom"></div>
             </section>
-
-            <section id="services" class="relative py-20 px-8 bg-dark-bg min-h-screen flex items-center justify-center">
-                <div class="section-blend-top"></div>
-                <div class="max-w-6xl mx-auto">
-                    <h2 class="font-display text-4xl font-bold text-center mb-12">Apa yang Saya Lakukan? 🤔</h2>
-                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                        <div class="bg-gradient-to-br from-brand-pink/20 to-dark-bg p-8 rounded-2xl border border-brand-pink/50 transform hover:-translate-y-2 transition-transform duration-300 shadow-lg">
-                            <div class="text-4xl mb-4">🎨</div>
-                            <h3 class="font-display text-2xl font-bold mb-2">Desain UI/UX</h3>
-                            <p class="text-gray-300">Menciptakan antarmuka yang intuitif dan menarik secara visual yang disukai pengguna.</p>
-                        </div>
-                        <div class="bg-gradient-to-br from-brand-yellow/20 to-dark-bg p-8 rounded-2xl border border-brand-yellow/50 transform hover:-translate-y-2 transition-transform duration-300 shadow-lg">
-                            <div class="text-4xl mb-4">🎯</div>
-                            <h3 class="font-display text-2xl font-bold mb-2">Landing Page Kreatif</h3>
-                            <p class="text-gray-300">Membangun halaman arahan yang tidak hanya menjual tetapi juga memikat audiens.</p>
-                        </div>
-                        <div class="bg-gradient-to-br from-brand-blue/20 to-dark-bg p-8 rounded-2xl border border-brand-blue/50 transform hover:-translate-y-2 transition-transform duration-300 shadow-lg">
-                            <div class="text-4xl mb-4">📈</div>
-                            <h3 class="font-display text-2xl font-bold mb-2">Visual Pemasaran Digital</h3>
-                            <p class="text-gray-300">Merancang visual untuk media sosial dan iklan yang menghentikan *scrolling*.</p>
-                        </div>
-                    </div>
-                </div>
-            </section>
             
-            <section id="portfolio" class="relative py-20 px-8 bg-dark-bg min-h-screen flex items-center justify-center">
+            <section id="portfolio" class="relative py-20 px-8 bg-dark-bg min-h-screen flex items-center justify-center overflow-hidden mars-bg">
+                <div class="absolute inset-0 z-10 about-overlay" style="background: radial-gradient(ellipse at center, rgba(10, 10, 20, 0) 0%, rgba(10, 10, 20, 1) 90%);"></div>
                 <div class="section-blend-top"></div>
-                <div class="max-w-6xl mx-auto">
-                    <h2 class="font-display text-4xl font-bold text-center mb-12">Karya Pilihan 🌟</h2>
+                <div class="absolute inset-0 z-0 mars-rotation-bg"></div>
+                <div class="absolute inset-0 z-10 portofolio-overlay"></div>
+
+                <div class="section-blend-top"></div>
+
+                <div class="planet-container top-[20%] left-[10%]" :style="`transform: translate(${rotateY * 2}px, ${-rotateX * 2}px);`">
+                    
+                    <div class="absolute inset-0 z-10 portofolio-overlay"></div>
+                    <a href="#services" @click.prevent="zoomToSection($event, '#services')" x-ref="planet_services">
+                        <div class="planet planet-style-2"></div>
+                        <div class="skill-tooltip">Desain UI/UX</div>
+                    </a>
+                </div>
+
+                <div class="planet-container bottom-1/4 right-[20%]" :style="`transform: translate(${rotateY * 2.5}px, ${-rotateX * 2.5}px);`">
+                    <a href="#about" @click.prevent="zoomToSection($event, '#about')" x-ref="planet_about">
+                        <div class="planet planet-style-4"></div>
+                        <div class="skill-tooltip">Tentang Saya</div>
+                    </a>
+                </div>
+
+                <div class="planet-container top-[15%] right-[15%]" :style="`transform: translate(${rotateY * 3}px, ${-rotateX * 3}px);`">
+                    <a href="#contact" @click.prevent="zoomToSection($event, '#contact')" x-ref="planet_contact">
+                        <div class="planet planet-style-1"></div>
+                        <div class="skill-tooltip">Hubungi Saya</div>
+                    </a>
+                </div>
+
+                <div class="relative z-20 w-full max-w-6xl mx-auto">
+                    <h2 class="font-display text-4xl md:text-5xl font-bold text-center mb-16 reveal-item" x-intersect:enter.once="$el.classList.add('reveal-active')">
+                        Karya Pilihan 🌟
+                    </h2>
                     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                        <div class="group relative overflow-hidden rounded-lg">
-                            <img src="https://images.unsplash.com/photo-1559028006-44a13675a33b?ixlib=rb-4.0.3&q=85&fm=jpg&crop=entropy&cs=srgb&w=600" alt="Judul Proyek 1" class="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-500">
-                            <div class="absolute inset-0 bg-black/70 flex flex-col justify-end p-6 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
-                                <h3 class="font-display text-2xl font-bold text-brand-yellow">Judul Proyek Satu</h3>
-                                <p class="text-gray-200">Ini bukan sekadar aplikasi, ini adalah teman digital baru untuk para pecinta kopi.</p>
+            
+                        <div class="group portfolio-card reveal-item" x-intersect:enter.once="$el.classList.add('reveal-active')" style="transition-delay: 200ms;">
+                            <img src="https://images.unsplash.com/photo-1559028006-44a13675a33b?ixlib=rb-4.0.3&q=85&fm=jpg&crop=entropy&cs=srgb&w=600" alt="Judul Proyek 1" class="portfolio-image">
+                            <div class="portfolio-overlay">
+                                <div class="p-6 md:p-8">
+                                    <h3 class="portfolio-title">Judul Proyek Satu</h3>
+                                    <p class="portfolio-description">Ini bukan sekadar aplikasi, ini adalah teman digital baru untuk para pecinta kopi.</p>
+                                </div>
                             </div>
                         </div>
-                        <div class="group relative overflow-hidden rounded-lg lg:col-span-2">
-                            <img src="https://images.unsplash.com/photo-1522199755839-a2bacb67c546?ixlib=rb-4.0.3&q=85&fm=jpg&crop=entropy&cs=srgb&w=1200" alt="Judul Proyek 2" class="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-500">
-                            <div class="absolute inset-0 bg-black/70 flex flex-col justify-end p-6 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
-                                <h3 class="font-display text-2xl font-bold text-brand-pink">Judul Proyek Dua</h3>
-                                <p class="text-gray-200">Mendesain ulang *e-commerce* fashion ini agar terasa seperti belanja dengan sahabatmu.</p>
+
+                        <div class="group portfolio-card lg:col-span-2 reveal-item" x-intersect:enter.once="$el.classList.add('reveal-active')" style="transition-delay: 400ms;">
+                            <img src="https://images.unsplash.com/photo-1522199755839-a2bacb67c546?ixlib=rb-4.0.3&q=85&fm=jpg&crop=entropy&cs=srgb&w=1200" alt="Judul Proyek 2" class="portfolio-image">
+                            <div class="portfolio-overlay">
+                                <div class="p-6 md:p-8">
+                                    <h3 class="portfolio-title text-brand-pink">Judul Proyek Dua</h3>
+                                    <p class="portfolio-description">Mendesain ulang *e-commerce* fashion ini agar terasa seperti belanja dengan sahabatmu.</p>
+                                </div>
                             </div>
                         </div>
+
                     </div>
                 </div>
+                <div class="section-blend-bottom"></div>
             </section>
             
             <section id="testimonials" class="relative py-20 px-8 bg-dark-bg min-h-screen flex items-center justify-center" x-data="{
@@ -544,19 +758,6 @@
         <div id="planet-clone" :style="cloneStyle"></div>
     </div>
 
-    <button 
-        @click="returnToGalaxy()"
-        x-show="activeSection"
-        x-transition:enter="transition ease-out duration-300"
-        x-transition:enter-start="opacity-0 transform translate-y-4"
-        x-transition:enter-end="opacity-100 transform translate-y-0"
-        x-transition:leave="transition ease-in duration-200"
-        x-transition:leave-start="opacity-100 transform translate-y-0"
-        x-transition:leave-end="opacity-0 transform translate-y-4"
-        class="fixed bottom-8 right-8 z-50 bg-gradient-to-r from-brand-purple to-brand-blue text-white font-bold py-3 px-6 rounded-full shadow-lg hover:scale-105 transform transition-transform duration-300"
-    >
-        🪐 Kembali ke Galaksi
-    </button>
 </body>
 </html>
 
