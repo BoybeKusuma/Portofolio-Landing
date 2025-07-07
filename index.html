@@ -53,6 +53,47 @@
     </script>
 
     <style>
+        .navbar-scrolled {
+        background-color: rgba(10, 10, 20, 0.7); /* dark-bg dengan transparansi */
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        box-shadow: 0 4px 30px rgba(0, 0, 0, 0.2);
+        /* [BARU] Tambahkan border tipis di bawah untuk efek kaca */
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    /* [BARU] Kelas untuk link menu navbar */
+    .nav-link {
+        position: relative;
+        padding: 8px 0;
+        text-decoration: none;
+        color: #D1D5DB; /* text-gray-300 */
+        transition: color 0.3s ease;
+    }
+
+    .nav-link:hover {
+        color: #FFFFFF; /* text-white */
+    }
+
+    /* [BARU] Pseudo-element untuk garis bawah animasi */
+    .nav-link::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        height: 2px;
+        background-color: #f8f8f8; /* brand-pink */
+        transform: scaleX(0);
+        transform-origin: bottom right;
+        transition: transform 0.4s cubic-bezier(0.86, 0, 0.07, 1);
+    }
+
+    .nav-link:hover::after {
+        transform: scaleX(1);
+        transform-origin: bottom left;
+    }
+
          /* CSS Tambahan untuk Scroll Snap */
         html, body {
             height: 100%;
@@ -105,7 +146,7 @@
         }
         
         .planet-style-1 {
-            width: 2000px; height: 200px;
+            width: 200px; height: 200px;
             background-image: url('textures/saturn.jpg'); 
             background-size: 200% 100%;
             box-shadow: inset 40px -30px 30px rgba(0, 0, 0, 0.753), inset -5px 5px 20px rgba(255,220,180,0.1);
@@ -290,6 +331,20 @@
         cloneStyle: {},
         activeSection: null,
         planetOrigins: {},
+        // [BARU] State untuk menu mobile
+        isMobileMenuOpen: false,
+
+        // Pemicu animasi navbar
+        setTimeout(() => { navReady = true }, 500);
+
+        // [BARU] Mengunci scroll saat menu mobile terbuka
+        $watch('isMobileMenuOpen', value => {
+            if (value) {
+                document.body.classList.add('overflow-y-hidden');
+            } else {
+                document.body.classList.remove('overflow-y-hidden');
+            }
+    });
 
         zoomToSection(event, targetSectionId) {
             if (this.isTransitioning) return;
@@ -359,6 +414,7 @@
             }
         }, 100);
     "
+    
     @mousemove.throttle.16="
         const hero = document.getElementById('hero');
         if (!hero || !hero.contains(event.target)) return;
@@ -372,9 +428,74 @@
     "
     @mouseleave="rotateX = 0; rotateY = 0;">
 
+    
+
     <div class="scroll-container">
         <main>
+            
+             <nav
+    x-data="{ scrolled: false, navReady: false, isMobileMenuOpen: false }"
+    x-init="setTimeout(() => navReady = true, 500)"
+    @scroll.window="scrolled = (window.pageYOffset > 50)"
+    class="fixed top-0 left-0 right-0 z-40 transition-all duration-500 ease-out"
+    :class="{
+        'navbar-solid': isMobileMenuOpen,
+        'navbar-scrolled': scrolled && !isMobileMenuOpen,
+        'h-24': !scrolled, 'h-20': scrolled,
+        'opacity-0 -translate-y-full': !navReady,
+        'opacity-100 translate-y-0': navReady
+    }"
+>
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex items-center justify-between w-full h-full">
+            <div class="flex-shrink-0">
+                <a href="#hero" @click.prevent="document.querySelector('#hero').scrollIntoView({ behavior: 'smooth' })" class="text-white font-display text-2xl font-bold">
+                    Boybe.
+                </a>
+            </div>
 
+            <div>
+                <div class="hidden md:block">
+                    <div class="ml-10 flex items-baseline space-x-8">
+                        <a href="#about" @click.prevent="document.querySelector('#about').scrollIntoView({ behavior: 'smooth' })" class="nav-link">Tentang Saya</a>
+                        <a href="#services" @click.prevent="document.querySelector('#services').scrollIntoView({ behavior: 'smooth' })" class="nav-link">Layanan</a>
+                        <a href="#portfolio" @click.prevent="document.querySelector('#portfolio').scrollIntoView({ behavior: 'smooth' })" class="nav-link">Portofolio</a>
+                        <a href="#contact" @click.prevent="document.querySelector('#contact').scrollIntoView({ behavior: 'smooth' })" class="text-gray-300 hover:text-white bg-white/10 px-4 py-2 rounded-full text-sm font-medium hover:bg-white/20 transition-all">
+                            Hubungi Saya
+                        </a>
+                    </div>
+                </div>
+
+                <div x-show="isMobileMenuOpen" 
+                     x-transition:enter="transition ease-out duration-300"
+                     x-transition:enter-start="opacity-0 scale-90"
+                     x-transition:enter-end="opacity-100 scale-100"
+                     x-transition:leave="transition ease-in duration-200"
+                     x-transition:leave-start="opacity-100 scale-100"
+                     x-transition:leave-end="opacity-0 scale-90"
+                     class="md:hidden flex items-center space-x-2">
+                    <a href="#about" @click.prevent="document.querySelector('#about').scrollIntoView({ behavior: 'smooth' }); isMobileMenuOpen = false;" class="text-gray-300 hover:text-white px-2 py-2 rounded-md text-xs font-medium">Tentang</a>
+                    <a href="#services" @click.prevent="document.querySelector('#services').scrollIntoView({ behavior: 'smooth' }); isMobileMenuOpen = false;" class="text-gray-300 hover:text-white px-2 py-2 rounded-md text-xs font-medium">Layanan</a>
+                    <a href="#portfolio" @click.prevent="document.querySelector('#portfolio').scrollIntoView({ behavior: 'smooth' }); isMobileMenuOpen = false;" class="text-gray-300 hover:text-white px-2 py-2 rounded-md text-xs font-medium">Karya</a>
+                    <a href="#contact" @click.prevent="document.querySelector('#contact').scrollIntoView({ behavior: 'smooth' }); isMobileMenuOpen = false;" class="text-gray-300 hover:text-white px-2 py-2 rounded-md text-xs font-medium">Kontak</a>
+                </div>
+            </div>
+
+            <div class="-mr-2 flex md:hidden">
+                <button @click="isMobileMenuOpen = !isMobileMenuOpen" type="button" class="inline-flex items-center justify-center p-2 rounded-md text-gray-300 hover:text-white hover:bg-white/10 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-dark-bg focus:ring-white" aria-controls="mobile-menu" aria-expanded="false">
+                    <span class="sr-only">Buka menu utama</span>
+                    <svg x-show="!isMobileMenuOpen" class="block h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                    </svg>
+                    <svg x-show="isMobileMenuOpen" class="block h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    </nav>
             
             <section 
                 id="hero" 
