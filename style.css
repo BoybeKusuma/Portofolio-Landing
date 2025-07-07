@@ -1,0 +1,329 @@
+<style>
+    .navbar-scrolled {
+        background-color: rgba(10, 10, 20, 0.7); /* dark-bg dengan transparansi */
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        box-shadow: 0 4px 30px rgba(0, 0, 0, 0.2);
+        /* [BARU] Tambahkan border tipis di bawah untuk efek kaca */
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    /* [BARU] Kelas untuk link menu navbar */
+    .nav-link {
+        position: relative;
+        padding: 8px 0;
+        text-decoration: none;
+        color: #D1D5DB; /* text-gray-300 */
+        transition: color 0.3s ease;
+    }
+
+    .nav-link:hover {
+        color: #FFFFFF; /* text-white */
+    }
+
+    /* [BARU] Pseudo-element untuk garis bawah animasi */
+    .nav-link::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        height: 2px;
+        background-color: #f8f8f8; /* brand-pink */
+        transform: scaleX(0);
+        transform-origin: bottom right;
+        transition: transform 0.4s cubic-bezier(0.86, 0, 0.07, 1);
+    }
+
+    .nav-link:hover::after {
+        transform: scaleX(1);
+        transform-origin: bottom left;
+    }
+
+         /* CSS Tambahan untuk Scroll Snap */
+        html, body {
+            height: 100%;
+            overflow: hidden; /* Mencegah double scrollbar */
+        }
+
+        .scroll-container {
+            height: 100vh;
+            overflow-y: scroll;
+            scroll-snap-type: y mandatory;
+            /* Menambahkan scroll-behavior agar scrollIntoView lebih mulus */
+            scroll-behavior: smooth;
+        }
+        section {
+            scroll-snap-align: start;
+        }
+
+        .text-gradient {
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+        }
+
+        .galaxy-bg {
+            position: absolute;
+            inset: 0;
+            overflow: hidden;
+            z-index: 0;
+        }
+
+        @keyframes rotate-texture {
+            0% { background-position: 0% 50%; }
+            100% { background-position: 200% 50%; }
+        }
+
+        .planet {
+            position: absolute;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+        
+        .planet-container {
+            position: absolute;
+            z-index: 10;
+        }
+
+        .planet-container:hover .planet {
+            transform: scale(1.1);
+        }
+        
+        .planet-style-1 {
+            width: 200px; height: 200px;
+            background-image: url('textures/saturn.jpg'); 
+            background-size: 200% 100%;
+            box-shadow: inset 40px -30px 30px rgba(0, 0, 0, 0.753), inset -5px 5px 20px rgba(255,220,180,0.1);
+            animation: float 10s ease-in-out infinite,  Orbit-1 10s ease-in-out infinite ,rotate-texture 45s linear infinite;
+        }
+
+        .planet-style-2 {
+            width: 150px; height: 150px;
+            background-image: url('textures/earth.jpg');
+            background-size: 200% 100%;
+            box-shadow: inset 10px 10px 30px rgba(0, 0, 0, 0.897);
+            animation: float 7s ease-in-out infinite, Orbit-2 10s ease-in-out infinite, rotate-texture 30s linear infinite;
+        }
+
+        .planet-style-3 {
+            width: 80px; height: 80px;
+            background-image: url('textures/mars.jpg');
+            background-size: 1000% 1000%;
+            box-shadow: inset -10px -20px 25px rgba(0, 0, 0, 0.726);
+            animation: float 4s ease-in-out infinite,  Orbit-3 10s ease-in-out infinite , rotate-texture 100s linear infinite;
+        }
+        
+        .planet-style-4 {
+            width: 150px; height: 150px;
+            background-image: url('textures/jupiter.jpg');
+            background-size: 200% 100%;
+            box-shadow: inset 20px 10px 20px rgba(0, 0, 0, 0.678);
+            animation: float 5s ease-in-out infinite, Orbit-4 10s ease-in-out infinite , rotate-texture 28s linear infinite;
+        }
+
+        .skill-tooltip {
+            position: absolute;
+            bottom: 100%; left: 50%;
+            transform: translateX(-50%) translateY(10px);
+            margin-bottom: 1rem; padding: 0.5rem 1rem;
+            background-color: rgba(15, 15, 26, 0.7);
+            backdrop-filter: blur(4px);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 0.375rem; font-size: 0.875rem;
+            white-space: nowrap; z-index: 40;
+            opacity: 0; visibility: hidden;
+            transition: opacity 0.3s ease, transform 0.3s ease, visibility 0.3s;
+        }
+
+        .planet-container:hover .skill-tooltip {
+            opacity: 1; visibility: visible;
+            transform: translateX(-50%) translateY(0);
+        }
+
+        .shooting-star-wrapper {
+            position: absolute; width: 2px; height: 120px;
+            transform-origin: top center;
+            background: linear-gradient(to top, transparent, rgba(255, 255, 255, 0.7));
+            border-radius: 50%;
+            animation: shooting-star 10s ease-in-out infinite;
+        }
+        
+        #transition-overlay { pointer-events: none; }
+
+        #planet-clone {
+            position: absolute;
+            z-index: 60;
+            transition: width 1s cubic-bezier(0.65, 0, 0.35, 1),
+                        height 1s cubic-bezier(0.65, 0, 0.35, 1),
+                        top 1s cubic-bezier(0.65, 0, 0.35, 1),
+                        left 1s cubic-bezier(0.65, 0, 0.35, 1),
+                        border-radius 1s cubic-bezier(0.65, 0, 0.35, 1),
+                        opacity 2s ease-out;
+            }
+        
+
+        
+        
+
+        @keyframes slide-texture {
+            from { background-position: 0% 50%; }
+            to { background-position: 200% 50%; }
+        }
+
+        .about-overlay {
+            background: radial-gradient(circle at center, rgba(10, 10, 20, 0.6) 0%, rgba(10, 10, 20, 1) 75%);
+        }
+
+        .glass-card {
+            background: rgba(255, 255, 255, 0.07);
+            border-radius: 16px;
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.2);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .glass-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 10px 50px rgba(0, 0, 0, 0.3);
+        }
+
+        .text-gradient-animated {
+            background-size: 200% 200%;
+            animation: shimmer 5s ease-in-out infinite;
+        }
+
+        @keyframes shimmer {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+
+        
+        .section-blend-top {
+            content: ''; position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 500px;
+            background: linear-gradient(to bottom, #0A0A14 0%, transparent);
+            z-index: 15;
+            pointer-events: none;
+        }
+
+        .section-blend-bottom {
+            content: ''; position: absolute;
+            bottom: 0; left: 0; right: 0;
+            height: 500px;
+            background: linear-gradient(to top, #0A0A14 0%, transparent);
+            z-index: 15;
+            pointer-events: none;
+        }
+
+        .about-overlay {
+            background: radial-gradient(circle at bottom,
+            rgba(10, 10, 20, 0.4) 20%,  /* Warna di pusat lingkaran (lebih transparan) */
+            rgba(10, 10, 20, 1) 40%   /* Warna di tepi lingkaran (lebih pekat) */
+            );
+        }
+
+        .services-overlay {
+            background: radial-gradient(circle at top,
+            rgba(10, 10, 20, 0.4) 20%,  /* Warna di pusat lingkaran (lebih transparan) */
+            rgba(10, 10, 20, 1) 40%   /* Warna di tepi lingkaran (lebih pekat) */
+            );
+        }
+
+        .portofolio-overlay {
+            background: radial-gradient(circle at center,
+            rgba(10, 10, 20, 0.4) 20%,  /* Warna di pusat lingkaran (lebih transparan) */
+            rgba(10, 10, 20, 1) 40%   /* Warna di tepi lingkaran (lebih pekat) */
+            );
+        }
+
+        .jupiter-rotation-bg {
+            background-image: url('textures/jupiter.jpg');
+            background-size: 200% 100%;
+            animation: slide-texture 90s linear infinite;
+        }
+
+        /* Latar belakang bumi yang berotasi */
+        .earth-rotation-bg {
+        background-image: url('Textures/Earth.jpg');
+        background-size: 300% auto;
+        /* Ubah baris ini untuk memposisikan bumi di sisi */
+        background-position: 25% 50%;
+        animation: slide-texture 180s linear infinite;
+        }
+
+        /* Latar belakang bumi yang berotasi */
+        .mars-rotation-bg {
+        background-image: url('Textures/Mars.jpg');
+        background-size: 150% auto;
+        /* Ubah baris ini untuk memposisikan bumi di sisi */
+        background-position: 25% 50%;
+        animation: slide-texture 100s linear infinite;
+        }
+        /* [BARU] Keyframes untuk animasi orbit elips */
+        @keyframes orbit-1 {
+        0%, 100% { transform: translate(0, 0) scale(1); }
+        25% { transform: translate(-15px, 10px) scale(0.95); }
+        50% { transform: translate(0, 20px) scale(0.9); }
+        75% { transform: translate(15px, 10px) scale(0.95); }
+        }
+
+        @keyframes orbit-2 {
+        0%, 100% { transform: translate(0, 0) scale(1); }
+        25% { transform: translate(12px, -8px) scale(1.05); }
+        50% { transform: translate(0, -15px) scale(1.1); }
+        75% { transform: translate(-12px, -8px) scale(1.05); }
+        }
+    
+        @keyframes orbit-3 {
+        0%, 100% { transform: translate(0, 0); }
+        25% { transform: translate(8px, 15px); }
+        50% { transform: translate(0, 0); }
+        75% { transform: translate(-8px, -15px); }
+        }
+    
+        @keyframes orbit-4 {
+        0%, 100% { transform: translate(0, 0); }
+        25% { transform: translate(-10px, -5px); }
+        50% { transform: translate(-20px, 0); }
+        75% { transform: translate(-10px, 5px); }
+        }
+
+        /* [BARU] Kelas untuk menerapkan animasi orbit */
+        .orbit-1 { animation: orbit-1 30s linear infinite; }
+        .orbit-2 { animation: orbit-2 50s linear infinite; }
+        .orbit-3 { animation: orbit-3 40s linear infinite reverse; } /* reverse agar arahnya berbeda */
+        .orbit-4 { animation: orbit-4 60s linear infinite reverse; }
+
+        /* Efek Glassmorphism yang disempurnakan */
+    .glass-card {
+        background: rgba(255, 255, 255, 0.05);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 1rem; /* Dibuat lebih bulat */
+        box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+    }
+    
+    /* Animasi untuk daftar layanan yang muncul satu per satu */
+    .stagger-enter {
+        opacity: 0;
+        transform: translateY(20px);
+        transition: opacity 0.4s ease-out, transform 0.4s ease-out;
+    }
+
+    
+
+    /* Gradien teks untuk judul layanan */
+    .text-gradient {
+        background-clip: text;
+        -webkit-background-clip: text;
+        colo
+        
+        
+</style>
