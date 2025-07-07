@@ -105,7 +105,7 @@
         }
         
         .planet-style-1 {
-            width: 150px; height: 150px;
+            width: 2000px; height: 200px;
             background-image: url('textures/saturn.jpg'); 
             background-size: 200% 100%;
             box-shadow: inset 40px -30px 30px rgba(0, 0, 0, 0.753), inset -5px 5px 20px rgba(255,220,180,0.1);
@@ -113,7 +113,7 @@
         }
 
         .planet-style-2 {
-            width: 100px; height: 100px;
+            width: 150px; height: 150px;
             background-image: url('textures/earth.jpg');
             background-size: 200% 100%;
             box-shadow: inset 10px 10px 30px rgba(0, 0, 0, 0.897);
@@ -129,7 +129,7 @@
         }
         
         .planet-style-4 {
-            width: 100px; height: 100px;
+            width: 150px; height: 150px;
             background-image: url('textures/jupiter.jpg');
             background-size: 200% 100%;
             box-shadow: inset 20px 10px 20px rgba(0, 0, 0, 0.678);
@@ -264,7 +264,7 @@
         /* Latar belakang bumi yang berotasi */
         .earth-rotation-bg {
         background-image: url('Textures/Earth.jpg');
-        background-size: 150% auto;
+        background-size: 300% auto;
         /* Ubah baris ini untuk memposisikan bumi di sisi */
         background-position: 25% 50%;
         animation: slide-texture 180s linear infinite;
@@ -397,7 +397,7 @@
                     </div>
                 </div>
                 
-                <div class="planet-container top-[20%] left-[10%]" :style="`transform: translate(${rotateY * 2}px, ${-rotateX * 2}px);`">
+                <div class="planet-container top-[15%] left-[10%]" :style="`transform: translate(${rotateY * 2}px, ${-rotateX * 2}px);`">
                     <a href="#services" @click.prevent="zoomToSection($event, '#services')" x-ref="planet_services">
                         <div class="planet planet-style-2"></div>
                         <div class="skill-tooltip">Desain UI/UX</div>
@@ -409,7 +409,7 @@
                         <div class="skill-tooltip">Karya Pilihan</div>
                     </a>
                 </div>
-                <div class="planet-container bottom-1/4 left-[25%]" :style="`transform: translate(${rotateY * 2.5}px, ${-rotateX * 2.5}px);`">
+                <div class="planet-container bottom-[15%] left-[10%]" :style="`transform: translate(${rotateY * 2.5}px, ${-rotateX * 2.5}px);`">
                     <a href="#about" @click.prevent="zoomToSection($event, '#about')" x-ref="planet_about">
                         <div class="planet planet-style-4"></div>
                         <div class="skill-tooltip">Tentang Saya</div>
@@ -435,9 +435,6 @@
                     </h1>
                     <p class="text-xl md:text-2xl text-gray-300 mb-8 max-w-2xl">Digital Marketing Enthusiast & UI/UX Designer.</p>
                     
-                    <a href="#contact" @click.prevent="zoomToSection($event, '#contact')" class="mt-4 bg-gradient-to-r from-brand-pink to-brand-yellow text-dark-bg font-bold py-4 px-8 rounded-full text-lg hover:scale-105 transform transition-transform duration-300 inline-block">
-                        Mulai Proyek 🚀
-                    </a>
                 </div>
             </section>
 
@@ -452,18 +449,24 @@
                             <div class="absolute rounded-full bg-white animate-star-twinkle"
                                 :style="(() => {
                                     let top, left;
-                                    const zone = Math.floor(Math.random() * 2); // Dipersempit menjadi 2 zona: kiri & kanan
-                        
-                                    // Zona tepi dibuat lebih sempit, misal 20% dari tepi
-                                    const safeZoneHorizontal = 0.20; 
+                                    const zone = Math.floor(Math.random() * 3); // 0: Kiri, 1: Kanan, 2: Atas
 
-                                    // Posisi atas (top) tetap acak dari atas ke bawah
-                                    top = Math.random(); 
-                        
-                                    if (zone === 0) { // Zona Kiri
+                                    // Definisikan lebar zona aman di tepi (misal: 15% dari lebar/tinggi)
+                                    const safeZoneHorizontal = 0.15;
+                                    const safeZoneVertical = 0.15;
+
+                                    if (zone === 0) { 
+                                        // ZONA KIRI: Bintang muncul di 15% bagian kiri layar
                                         left = Math.random() * safeZoneHorizontal;
-                                    } else { // Zona Kanan
+                                        top = Math.random(); // Posisi atas acak dari atas ke bawah
+                                    } else if (zone === 1) { 
+                                        // ZONA KANAN: Bintang muncul di 15% bagian kanan layar
                                         left = 1 - (Math.random() * safeZoneHorizontal);
+                                        top = Math.random();
+                                    } else { 
+                                        // ZONA ATAS: Bintang muncul di 15% bagian atas layar
+                                        left = Math.random(); // Posisi kiri acak dari kiri ke kanan
+                                        top = Math.random() * safeZoneVertical;
                                     }
 
                                     return `
@@ -476,7 +479,8 @@
                                     `;
                                 })()">
                             </div>
-                         </template>
+                        </template>
+    
                         <div class="shooting-star-wrapper" style="top: -20%; left: 20%; animation-delay: 0s;"></div>
                         <div class="shooting-star-wrapper" style="top: -20%; left: 80%; animation-delay: 3s;"></div>
                     </div>
@@ -553,18 +557,24 @@
                             <div class="absolute rounded-full bg-white animate-star-twinkle"
                                 :style="(() => {
                                     let top, left;
-                                    const zone = Math.floor(Math.random() * 2); // Dipersempit menjadi 2 zona: kiri & kanan
-                        
-                                    // Zona tepi dibuat lebih sempit, misal 20% dari tepi
-                                    const safeZoneHorizontal = 0.20; 
+                                    // Mengurangi zona menjadi 3: Kiri, Kanan, dan Bawah
+                                    const zone = Math.floor(Math.random() * 3); 
 
-                                    // Posisi atas (top) tetap acak dari atas ke bawah
-                                    top = Math.random(); 
-                        
-                                    if (zone === 0) { // Zona Kiri
+                                    const safeZoneHorizontal = 0.15;
+                                    const safeZoneVertical = 0.15;
+
+                                    if (zone === 0) { 
+                                        // ZONA KIRI
                                         left = Math.random() * safeZoneHorizontal;
-                                    } else { // Zona Kanan
+                                        top = Math.random();
+                                    } else if (zone === 1) { 
+                                        // ZONA KANAN
                                         left = 1 - (Math.random() * safeZoneHorizontal);
+                                        top = Math.random();
+                                    } else { 
+                                        // ZONA BAWAH (Zona Atas telah dihilangkan)
+                                        left = Math.random(); 
+                                        top = 1 - (Math.random() * safeZoneVertical);
                                     }
 
                                     return `
@@ -577,7 +587,8 @@
                                     `;
                                 })()">
                             </div>
-                         </template>
+                        </template>
+    
                         <div class="shooting-star-wrapper" style="top: -20%; left: 20%; animation-delay: 0s;"></div>
                         <div class="shooting-star-wrapper" style="top: -20%; left: 80%; animation-delay: 3s;"></div>
                     </div>
@@ -632,12 +643,61 @@
             </section>
             
             <section id="portfolio" class="relative py-20 px-8 bg-dark-bg min-h-screen flex items-center justify-center overflow-hidden mars-bg">
-                <div class="absolute inset-0 z-10 about-overlay" style="background: radial-gradient(ellipse at center, rgba(10, 10, 20, 0) 0%, rgba(10, 10, 20, 1) 90%);"></div>
-                <div class="section-blend-top"></div>
+                
                 <div class="absolute inset-0 z-0 mars-rotation-bg"></div>
-                <div class="absolute inset-0 z-10 portofolio-overlay"></div>
+                <div class="absolute inset-0 z-0 portofolio-overlay"></div>
+
+                <div class="absolute inset-0 z-0 transition-transform duration-300 ease-out" :style="`transform: perspective(1000px) rotateX(${rotateX / 2}deg) rotateY(${rotateY / 2}deg) scale(1.2);`">
+
+                </div>
+                <div class="galaxy-bg">
+                    <template x-for="i in 150">
+                        <div class="absolute rounded-full bg-white animate-star-twinkle"
+                            :style="(() => {
+                                let top, left;
+                                const zone = Math.floor(Math.random() * 4); // 0: Kiri, 1: Kanan, 2: Atas, 3: Bawah
+
+                                // Definisikan lebar zona aman di tepi (misal: 15% dari lebar/tinggi)
+                                const safeZoneHorizontal = 0.15;
+                                const safeZoneVertical = 0.15;
+
+                                if (zone === 0) {
+                                    // ZONA KIRI
+                                    left = Math.random() * safeZoneHorizontal;
+                                    top = Math.random(); 
+                                } else if (zone === 1) {
+                                    // ZONA KANAN
+                                    left = 1 - (Math.random() * safeZoneHorizontal);
+                                    top = Math.random();
+                                } else if (zone === 2) {
+                                    // ZONA ATAS
+                                    left = Math.random();
+                                    top = Math.random() * safeZoneVertical;
+                                } else { 
+                                    // ZONA BAWAH
+                                    left = Math.random(); 
+                                    top = 1 - (Math.random() * safeZoneVertical);
+                                }
+
+                                return `
+                                    top: ${top * 100}%;
+                                    left: ${left * 100}%;
+                                    width: ${Math.random() * 2 + 1}px;
+                                    height: ${Math.random() * 2 + 1}px;
+                                    animation-delay: ${Math.random() * 5}s;
+                                    animation-duration: ${Math.random() * 3 + 2}s;
+                                `;
+                                })()">
+                        </div>
+                    </template>
+    
+                        <div class="shooting-star-wrapper" style="top: -20%; left: 20%; animation-delay: 0s;"></div>
+                        <div class="shooting-star-wrapper" style="top: -20%; left: 80%; animation-delay: 3s;"></div>
+                    </div>
 
                 <div class="section-blend-top"></div>
+
+                
 
                 <div class="planet-container top-[20%] left-[10%]" :style="`transform: translate(${rotateY * 2}px, ${-rotateX * 2}px);`">
                     
