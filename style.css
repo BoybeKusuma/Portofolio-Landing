@@ -93,7 +93,7 @@
         
         .planet-style-1 {
             width: 200px; height: 200px;
-            background-image: url('textures/saturn.jpg'); 
+            background-image: url('image/saturn.jpg'); 
             background-size: 200% 100%;
             box-shadow: inset 40px -30px 30px rgba(0, 0, 0, 0.753), inset -5px 5px 20px rgba(255,220,180,0.1);
             animation: float 10s ease-in-out infinite,  Orbit-1 10s ease-in-out infinite ,rotate-texture 45s linear infinite;
@@ -101,7 +101,7 @@
 
         .planet-style-2 {
             width: 150px; height: 150px;
-            background-image: url('textures/earth.jpg');
+            background-image: url('image/earth.jpg');
             background-size: 200% 100%;
             box-shadow: inset 10px 10px 30px rgba(0, 0, 0, 0.897);
             animation: float 7s ease-in-out infinite, Orbit-2 10s ease-in-out infinite, rotate-texture 30s linear infinite;
@@ -109,7 +109,7 @@
 
         .planet-style-3 {
             width: 80px; height: 80px;
-            background-image: url('textures/mars.jpg');
+            background-image: url('image/mars.jpg');
             background-size: 1000% 1000%;
             box-shadow: inset -10px -20px 25px rgba(0, 0, 0, 0.726);
             animation: float 4s ease-in-out infinite,  Orbit-3 10s ease-in-out infinite , rotate-texture 100s linear infinite;
@@ -117,7 +117,7 @@
         
         .planet-style-4 {
             width: 150px; height: 150px;
-            background-image: url('textures/jupiter.jpg');
+            background-image: url('image/jupiter.jpg');
             background-size: 200% 100%;
             box-shadow: inset 20px 10px 20px rgba(0, 0, 0, 0.678);
             animation: float 5s ease-in-out infinite, Orbit-4 10s ease-in-out infinite , rotate-texture 28s linear infinite;
